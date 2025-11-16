@@ -27,7 +27,7 @@
                                     v
                              [Venue Dashboard UI]
 ```
-##Legend
+## Legend
 (1), (2), (3), (5) — Synchronous HTTPS or DB/RPC requests
 
 (4) — Asynchronous Stripe webhook delivery
