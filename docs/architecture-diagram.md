@@ -1,5 +1,6 @@
-Architecture Diagram Outline
+# Architecture Diagram (Text Outline)
 
+```text
 [Diner: NFC Tap + Browser]
         |
         | (1) HTTPS request to load ordering UI
@@ -10,7 +11,7 @@ Architecture Diagram Outline
         v
 [Twyst Backend API] ------------+
         |                       |
-        | (3) SQL/ RPC          | (5) HTTPS API calls (create PaymentIntent, attach metadata)
+        | (3) SQL / RPC         | (5) HTTPS API calls (create PaymentIntent, attach metadata)
         v                       v
 [Supabase / Database]      [Stripe (PaymentIntents + Connect)]
                                     |
@@ -25,7 +26,9 @@ Architecture Diagram Outline
                                     | (7) Database updates + notifications
                                     v
                              [Venue Dashboard UI]
-Legend:
-Numbered vertical arrows (1), (2), (3), (5) represent synchronous HTTPS requests.
-Arrow (4) represents asynchronous webhook delivery from Stripe to Twyst.
-Arrows (6) and (7) represent internal asynchronous processing and resulting state updates consumed by the dashboard.
+Legend
+(1), (2), (3), (5) — Synchronous HTTPS or DB/RPC requests
+
+(4) — Asynchronous Stripe webhook delivery
+
+(6), (7) — Internal async processing + state updates used by the dashboar
