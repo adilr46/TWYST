@@ -50,7 +50,7 @@ def create_payment_intent(order):
         },
     )
 
-Event Ordering Persistence
+##Event Ordering Persistence
 
 def process_event(event):
     # Lock based on PaymentIntent or order identity
