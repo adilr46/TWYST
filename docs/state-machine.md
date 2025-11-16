@@ -73,6 +73,7 @@ Transitions occur only when both the **current state** and the **incoming event*
          +---------------------+
          |     COMPLETED       |
          +---------------------+
+
 Optional Exits
 CREATED → CANCELLED (manual cancel)
 
