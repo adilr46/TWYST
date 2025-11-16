@@ -73,8 +73,9 @@ Transitions occur only when both the **current state** and the **incoming event*
          +---------------------+
          |     COMPLETED       |
          +---------------------+
+```
 
-Optional Exits
+## Optional Exits
 CREATED → CANCELLED (manual cancel)
 
 PAYMENT_PENDING → EXPIRED (timeout)
