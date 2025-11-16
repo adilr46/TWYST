@@ -140,9 +140,6 @@ Additional sequencing details:
 
 https://app.twyst.example/venues/{venueId}/tables/{tableId}
 
-markdown
-Copy code
-
 2. Diner composes an order → Twyst API creates:
 - a local `CREATED` order  
 - a Stripe PaymentIntent  
