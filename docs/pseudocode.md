@@ -17,7 +17,7 @@ def handle_webhook(request):
         raise  # allow Stripe to retry
 ```
 
-##Idempotency Ledger Check
+## Idempotency Ledger Check
 ```python
 def already_processed(event_id):
     record = idempotency_store.lookup(event_id)
@@ -25,7 +25,7 @@ def already_processed(event_id):
 ```
 
 
-##Event Sequencing Guard
+## Event Sequencing Guard
 ```python
 def apply_payment_intent_succeeded(order, event):
     expected_states = ["CREATED", "PAYMENT_PENDING"]
@@ -39,7 +39,7 @@ def apply_payment_intent_succeeded(order, event):
 
 ```
 
-##Connect Account Routing
+## Connect Account Routing
 
 ```python
 def create_payment_intent(order):
@@ -57,7 +57,7 @@ def create_payment_intent(order):
     )
 ```
 
-##Event Ordering Persistence
+## Event Ordering Persistence
 
 ```python
 def process_event(event):
