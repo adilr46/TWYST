@@ -74,62 +74,18 @@ The full state machine is described in `docs/state-machine.md`.
 
 ## Multi-Tenant Stripe Connect Model
 
-- Each venue is associated with a distinct Stripe Connect account.  
-- Twyst creates PaymentIntents from the platform account with:
+Each venue in Twyst has a **dedicated Stripe Connect account**, ensuring:
 
-json
-transfer_data[destination] = "<venue_connect_account_id>"
-Destination accounts are selected based on venue metadata stored in Twyst’s database.
+- isolated settlements  
+- correct fund flows  
+- clean per-venue reporting  
+- accurate reconciliation  
 
+Twyst creates PaymentIntents in the platform account using Connect’s `transfer_data` field:
 
-Payout events and balances from Stripe are used to keep internal dashboards aligned with Stripe’s view of settlements.
-Stripe accumulates charges in each destination Connect account.
-Stripe payout events (e.g., payout.paid) trigger reconciliation jobs.
-Twyst compares payout amounts against internal ledgers; discrepancies raise alerts to ops.
-Dashboard surfaces settlement timelines and payout summaries per venue.
-
-## Webhook Idempotency & Reliability
-
-All Stripe webhooks flow through a single handler.
-
-Each event:
-
-Has its signature verified via Stripe’s signing secret.
-
-Is checked against an idempotency ledger keyed by event.id.
-
-Is applied only if the current order state and event type are compatible.
-
-Transient failures cause the handler to surface an error, allowing Stripe to retry safely.
-
-The webhook sequencing and examples are in docs/webhook-sequencing-example.md.
-
-Example Flows
-**Diner Ordering**
-
-1.Diner taps NFC tag → browser loads
-https://app.twyst.example/venues/{venueId}/tables/{tableId}
-
-2.Diner composes an order → Twyst API creates a local order + Stripe PaymentIntent.
-
-3.Diner confirms payment → Stripe marks the PaymentIntent as succeeded and emits webhooks.
-
-4.Webhook handler updates order state; UI polls or receives push updates.
-
-**Venue Receiving Orders**
-
--The venue dashboard polls or subscribes to a secure endpoint.
-
--Orders in PAYMENT_SUCCEEDED appear in the “Ready to Fulfill” queue.
-
--Staff move orders to FULFILLING and then COMPLETED based on operational steps.
-
-**Payouts Overview**
-
--Stripe accumulates charges in each venue’s Connect account.
-
--payout.* events from Stripe trigger reconciliation jobs.
-
--Twyst compares Stripe payout amounts against internal ledgers.
-
--Settlement timelines and payout summaries appear in dashboards.
+```json
+{
+  "transfer_data": {
+    "destination": "<venue_connect_account_id>"
+  }
+}
