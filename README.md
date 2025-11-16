@@ -138,7 +138,7 @@ Additional sequencing details:
 
 1. Diner taps NFC tag → browser loads:
 
-https://app.twyst.example/venues/{venueId}/tables/{tableId}
+https://twyst.vercel.app/d/demo-cafe?t=demo123
 
 2. Diner composes an order → Twyst API creates:
 - a local `CREATED` order  
