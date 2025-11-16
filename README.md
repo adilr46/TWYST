@@ -32,7 +32,7 @@ This repository documents Twyst’s **architecture, state machine, and Stripe in
   Next.js application rendered in the diner’s browser after tapping NFC.
 
 - **Backend API**  
-  Receives order requests, orchestrates business logic, and persists state (e.g. in Supabase).
+  Receives order requests, orchestrates business logic, and persists state (in Supabase).
 
 - **Stripe Integration**  
   PaymentIntent lifecycle events inform both order state transitions and payout reconciliation.
