@@ -105,31 +105,31 @@ Transient failures cause the handler to surface an error, allowing Stripe to ret
 The webhook sequencing and examples are in docs/webhook-sequencing-example.md.
 
 Example Flows
-Diner Ordering
+**Diner Ordering**
 
-Diner taps NFC tag → browser loads
+-Diner taps NFC tag → browser loads
 https://app.twyst.example/venues/{venueId}/tables/{tableId}
 
-Diner composes an order → Twyst API creates a local order + Stripe PaymentIntent.
+-Diner composes an order → Twyst API creates a local order + Stripe PaymentIntent.
 
-Diner confirms payment → Stripe marks the PaymentIntent as succeeded and emits webhooks.
+-Diner confirms payment → Stripe marks the PaymentIntent as succeeded and emits webhooks.
 
-Webhook handler updates order state; UI polls or receives push updates.
+-Webhook handler updates order state; UI polls or receives push updates.
 
-Venue Receiving Orders
+**Venue Receiving Orders**
 
-The venue dashboard polls or subscribes to a secure endpoint.
+-The venue dashboard polls or subscribes to a secure endpoint.
 
-Orders in PAYMENT_SUCCEEDED appear in the “Ready to Fulfill” queue.
+-Orders in PAYMENT_SUCCEEDED appear in the “Ready to Fulfill” queue.
 
-Staff move orders to FULFILLING and then COMPLETED based on operational steps.
+-Staff move orders to FULFILLING and then COMPLETED based on operational steps.
 
-Payouts Overview
+**Payouts Overview**
 
-Stripe accumulates charges in each venue’s Connect account.
+-Stripe accumulates charges in each venue’s Connect account.
 
-payout.* events from Stripe trigger reconciliation jobs.
+-payout.* events from Stripe trigger reconciliation jobs.
 
-Twyst compares Stripe payout amounts against internal ledgers.
+-Twyst compares Stripe payout amounts against internal ledgers.
 
-Settlement timelines and payout summaries appear in dashboards.
+-Settlement timelines and payout summaries appear in dashboards.
