@@ -89,7 +89,87 @@ Twyst creates PaymentIntents in the platform account using Connect’s `transfer
     "destination": "<venue_connect_account_id>"
   }
 }
+```
 
 
-    - "Dashboards display payout summaries, settlement timelines, discrepancy flags, and reconciliation status"
+Destination accounts are selected based on venue metadata stored in Twyst’s database.
 
+Twyst monitors settlement correctness using:
+
+- Stripe balance & payout APIs  
+- `payout.*` events (e.g., `payout.paid`)  
+- internal reconciliation jobs comparing Stripe payouts with local aggregates  
+
+Dashboards display:
+
+- settlement timelines  
+- payout amounts  
+- discrepancy flags  
+- venue-specific settlement summaries  
+
+---
+
+## Webhook Idempotency & Reliability
+
+All Stripe webhooks flow through a **single, central handler**.
+
+Each event:
+
+- has its signature verified with Stripe’s signing secret  
+- is checked against an idempotency ledger keyed by `event.id`  
+- is processed only when the order’s current state and event type are compatible  
+- is safe to retry — Twyst throws on transient failures so Stripe can redeliver  
+
+These guarantees provide:
+
+- deterministic, monotonic state transitions  
+- no duplicate state updates  
+- no regressions from late or out-of-order events  
+- correct ordering even under repeated deliveries  
+
+Additional sequencing details:  
+`docs/webhook-sequencing-example.md`
+
+---
+
+## Example Flows
+
+### 🟦 Diner Ordering
+
+1. Diner taps NFC tag → browser loads:
+
+https://app.twyst.example/venues/{venueId}/tables/{tableId}
+
+markdown
+Copy code
+
+2. Diner composes an order → Twyst API creates:
+- a local `CREATED` order  
+- a Stripe PaymentIntent  
+
+3. Diner confirms payment → Stripe marks the PaymentIntent as `succeeded`.  
+
+4. Webhooks update Twyst’s order state; frontend polls or receives push notifications.
+
+---
+
+### 🟩 Venue Receiving Orders
+
+1. Venue dashboard polls or subscribes to its live feed.  
+2. Orders in `PAYMENT_SUCCEEDED` appear in the **Ready to Fulfill** queue.  
+3. Staff transition orders:
+- `PAYMENT_SUCCEEDED` → `FULFILLING`  
+- `FULFILLING` → `COMPLETED`  
+
+---
+
+### 🟧 Payouts Overview
+
+1. Stripe accumulates charges in each venue’s Connect account.  
+2. `payout.*` events (e.g., `payout.paid`) trigger reconciliation jobs.  
+3. Twyst compares Stripe payout totals with local ledgers.  
+4. Dashboards surface:
+- payout summaries  
+- settlement timelines  
+- discrepancy flags  
+- reconciliation status  
