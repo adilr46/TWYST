@@ -107,14 +107,14 @@ The webhook sequencing and examples are in docs/webhook-sequencing-example.md.
 Example Flows
 **Diner Ordering**
 
--Diner taps NFC tag → browser loads
+1.Diner taps NFC tag → browser loads
 https://app.twyst.example/venues/{venueId}/tables/{tableId}
 
--Diner composes an order → Twyst API creates a local order + Stripe PaymentIntent.
+2.Diner composes an order → Twyst API creates a local order + Stripe PaymentIntent.
 
--Diner confirms payment → Stripe marks the PaymentIntent as succeeded and emits webhooks.
+3.Diner confirms payment → Stripe marks the PaymentIntent as succeeded and emits webhooks.
 
--Webhook handler updates order state; UI polls or receives push updates.
+4.Webhook handler updates order state; UI polls or receives push updates.
 
 **Venue Receiving Orders**
 
